@@ -13,19 +13,30 @@ const db = require('./config/keys')
 //Connect to MongoDB
 mongoose.connect(db, {useNewUrlParser: true}).then(console.log("Connected to MongoSB")).catch(err =>console.log(err))
 
-//EJS
+// EJS
 app.use(expressLayouts);
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 
-//BodyParser
-app.use(express.urlencoded({
-    extended:false
-}))
+// Express body parser
+app.use(express.urlencoded({ extended: true }));
 
-//Routes
-app.use(`/`, require("./routes/index"));
-app.use("/users", require("./routes/users"));
+// Express session
+app.use(
+    session({
+        secret: 'secret',
+        resave: true,
+        saveUninitialized: true
+    })
+);
 
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Connect flash
+app.use(flash());
+
+// Global variables
 app.use(function(req, res, next) {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
@@ -33,6 +44,10 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Routes
+app.use('/', require('./routes/index.js'));
+app.use('/users', require('./routes/users.js'));
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, console.log(`Server is running on ${PORT}`));
+app.listen(PORT, console.log(`Server running on  ${PORT}`));
