@@ -10,4 +10,7 @@ router.get('/register', (req,res)=>{
     res.render('register')
 })
 
+//Register Handle
+
+
 module.exports = router;
