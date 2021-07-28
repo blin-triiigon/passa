@@ -3,6 +3,9 @@ const app = express();
 const expressLayouts = require("express-ejs-layouts");
 const path = require("express-session");
 const mongoose = require("mongoose");
+const passport = require('passport');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 //DB Config
 const db = require('./config/keys')
@@ -22,6 +25,13 @@ app.use(express.urlencoded({
 //Routes
 app.use(`/`, require("./routes/index"));
 app.use("/users", require("./routes/users"));
+
+app.use(function(req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 const PORT = process.env.PORT || 5000;
 
