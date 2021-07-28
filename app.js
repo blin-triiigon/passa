@@ -2,6 +2,13 @@ const express = require("express");
 const app = express();
 const expressLayouts = require("express-ejs-layouts");
 const path = require("express-session");
+const mongoose = require("mongoose");
+
+//DB Config
+const db = require('./config/keys')
+
+//Connect to MongoDB
+mongoose.connect(db, {useNewUrlParser: true}).then(console.log("Connected to MongoSB")).catch(err =>console.log(err))
 
 //EJS
 app.use(expressLayouts);
